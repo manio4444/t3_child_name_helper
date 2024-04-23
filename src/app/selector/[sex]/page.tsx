@@ -1,8 +1,13 @@
 import Link from "next/link";
 
+export enum SEX_ENUM {
+    WOMEN = 'women',
+    MEN = 'men',
+}
+
 interface ISelectorProps {
     params: {
-        sex: string;
+        sex: SEX_ENUM;
     };
 }
 
@@ -12,7 +17,7 @@ export default function Selector(props: ISelectorProps) {
     return (
         <main>
             <Link
-                href={params.sex === "women" ?
+                href={params.sex === SEX_ENUM.WOMEN ?
                     "https://api.dane.gov.pl/1.4/resources/54100,imiona-zenskie-nadane-dzieciom-w-polsce-w-2023-r-imie-pierwsze/data"
                     : "https://api.dane.gov.pl/1.4/resources/54099,imiona-meskie-nadane-dzieciom-w-polsce-w-2023-r-imie-pierwsze/data"
                 }
@@ -22,7 +27,7 @@ export default function Selector(props: ISelectorProps) {
             </Link>
             <div>{params.sex}</div>
             <div>
-                {params.sex === "women" ?
+                {params.sex === SEX_ENUM.WOMEN ?
                     "Imiona żeńskie nadane dzieciom w Polsce w 2023 r. - imię pierwsze"
                     : "Imiona męskie nadane dzieciom w Polsce w 2023 r. - imię pierwsze"
                 }
