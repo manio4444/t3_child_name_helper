@@ -1,5 +1,6 @@
 import {type PropsWithChildren} from "react";
 import {TRPCReactProvider} from "~/trpc/react";
+import {NextUIProvider} from "@nextui-org/react";
 
 /**
  *
@@ -9,7 +10,10 @@ import {TRPCReactProvider} from "~/trpc/react";
  */
 export default function Providers({children}: PropsWithChildren) {
     return (
-        <TRPCReactProvider>{children}</TRPCReactProvider>
-
+        <NextUIProvider>
+            <TRPCReactProvider>
+                {children}
+            </TRPCReactProvider>
+        </NextUIProvider>
     )
 }
