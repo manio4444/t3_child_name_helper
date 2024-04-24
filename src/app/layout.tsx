@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import Providers from "~/app/providers";
+import Navbar from "~/app/_components/navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
       <Providers>
+          <Navbar />
         {children}
       </Providers>
       </body>
