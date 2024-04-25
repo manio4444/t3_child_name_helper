@@ -1,18 +1,20 @@
 'use client';
 
+import {useEffect, useState} from "react";
 import {
     Card,
     CardBody,
     Tab,
     Table,
-    TableBody, TableCell,
+    TableBody,
+    TableCell,
     TableColumn,
     TableHeader,
     TableRow,
     Tabs
 } from "@nextui-org/react";
+
 import SelectorSource from "~/app/_components/selectorSource";
-import {useEffect, useState} from "react";
 
 export enum SEX_ENUM {
     WOMEN = 'women',
