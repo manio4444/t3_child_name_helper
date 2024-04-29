@@ -1,13 +1,14 @@
 import {Button, Card, CardBody, RadioGroup} from "@nextui-org/react";
 import Link from "next/link";
 
-import {type ISelectorConfig, type SEX_ENUM} from "~/app/selector/[sex]/page";
+import {type ISelectorSourceElement} from "~/app/selector/[sex]/page";
 import {CustomRadio} from "~/app/_components/customRadio";
+import {type IUseSelector} from "~/app/selector/[sex]/useSelector";
 
 interface ISelectorSource {
-    options: ISelectorConfig[SEX_ENUM]['sources'];
-    selected: string;
-    onValueChange: (value: string) => void;
+    options: Array<ISelectorSourceElement>;
+    selected: IUseSelector['source'];
+    onValueChange: IUseSelector['onSourceChange'];
 }
 
 export default function SelectorSource({options, selected, onValueChange}: ISelectorSource) {
