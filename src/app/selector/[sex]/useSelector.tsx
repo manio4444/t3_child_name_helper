@@ -9,6 +9,7 @@ import {type Dispatch, type SetStateAction, useEffect, useState} from "react";
 export interface IUseSelector {
     getCurrentSource: () => ISelectorSourceElement | undefined,
     getNextNameToReviev: () => IApiDataItem | undefined,
+    loadingApiData: boolean;
     onSourceChange: (value: string) => void;
     selectedSex: SEX_ENUM,
     source: string,
@@ -123,6 +124,7 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
     return {
         getCurrentSource,
         getNextNameToReviev,
+        loadingApiData,
         onSourceChange,
         selectedSex,
         source,

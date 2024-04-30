@@ -3,15 +3,20 @@ import {Card, CardBody} from "@nextui-org/react";
 import ErrorCard from "~/app/_components/errorCard";
 import {type IApiDataItem} from "~/app/selector/[sex]/useSelector";
 import {type ISelectorSourceElement} from "~/app/selector/[sex]/page";
+import LoadingCard from "~/app/_components/loadingCard";
 
 interface ISelectorSelect {
     currentSource?: ISelectorSourceElement;
+    loadingApiData: boolean;
     nextNameToReviev?: IApiDataItem;
 }
 
 
-export default function SelectorSelect({currentSource, nextNameToReviev}: ISelectorSelect) {
+export default function SelectorSelect({currentSource, loadingApiData, nextNameToReviev}: ISelectorSelect) {
 
+    if (loadingApiData) {
+        return <LoadingCard desc="LOADING DATA"/>
+    }
     if (!currentSource) {
         return <ErrorCard desc={'Nie wybrano źródła imion.'}/>
     }
@@ -22,12 +27,12 @@ export default function SelectorSelect({currentSource, nextNameToReviev}: ISelec
     return (
         <Card>
             <CardBody>
-                {nextNameToReviev && <p>
-                    <div>[{nextNameToReviev?.id}]</div>
-                    <div>{nextNameToReviev?.attributes?.col1?.val}</div>
-                    <div>{nextNameToReviev?.attributes?.col2?.val}</div>
-                    <div>{nextNameToReviev?.attributes?.col3?.val}</div>
-                </p>
+                {nextNameToReviev && <div>
+                    <p>[{nextNameToReviev?.id}]</p>
+                    <p>{nextNameToReviev?.attributes?.col1?.val}</p>
+                    <p>{nextNameToReviev?.attributes?.col2?.val}</p>
+                    <p>{nextNameToReviev?.attributes?.col3?.val}</p>
+                </div>
                 }
             </CardBody>
         </Card>
