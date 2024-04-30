@@ -40,47 +40,54 @@ interface ISelectorSelectApiData {
 
 export default function SelectorSelect({currentSource}: ISelectorSelect) {
     const [apiData, setApiData] = useState<ISelectorSelectApiData[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const filterDuplicates = (value: ISelectorSelectApiData, index: number, self: ISelectorSelectApiData[]) =>
+        index === self.findIndex(i => (i.id === value.id));
+
 
     useEffect(() => {
         if (!currentSource) return;
 
         console.log('### currentSource', currentSource)
 
-        const triggerfetchApiData = (url: string | URL | Request, setApiData: Dispatch<SetStateAction<ISelectorSelectApiData[]>>) => {
-            console.log('### triggerfetchApiData(url)', url);
+        const triggerfetchApiData = (url: string | URL | Request, setApiData: Dispatch<SetStateAction<ISelectorSelectApiData[]>>, setLoading: Dispatch<SetStateAction<boolean>>) => {
             fetch(url, {cache: 'force-cache'}).then((res) => {
                 return res.json();
             }).then((res) => {
-                // console.log('### res', res)
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 if (res?.data && Array.isArray(res.data)) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
                     const data: ISelectorSelectApiData[] = res?.data;
-                    setApiData((prevState) => {
-                            return [...prevState, ...data]
-                        }
-                    )
+                    setApiData((prevState) => [...prevState, ...data])
                 }
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                if (!res?.links) return;
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                if (!res?.links?.next) return;
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                if (res?.links?.self === res?.links?.last) return;
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument
-                // console.log('#### res.links.next', res.links.next);
-                triggerfetchApiData(res.links.next, setApiData);
+                if (res?.links?.next && res?.links?.self !== res?.links?.last) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument
+                    triggerfetchApiData(res.links.next, setApiData, setLoading);
+                } else {
+                    setLoading(false);
+                }
             }).catch(err => {
                 console.error(err);
+                setLoading(false);
             }).finally()
         }
-
         setApiData([]);
-        triggerfetchApiData(currentSource.value, (x) => setApiData(x));
-
-
+        triggerfetchApiData(currentSource.value, (x) => setApiData(x), (x) => setLoading(x));
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+
+    useEffect(() => {
+        if (loading) return;
+
+        console.log('### apiData', apiData)
+        console.log('### apiData.filter(filterDuplicates)', apiData.filter(filterDuplicates))
+        const sortedApiData = apiData.filter(filterDuplicates);
+        setApiData(sortedApiData);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading]);
 
 
     if (!currentSource) {
@@ -90,7 +97,14 @@ export default function SelectorSelect({currentSource}: ISelectorSelect) {
     return (
         <Card>
             <CardBody>
-                content
+                <p>count: {apiData.length}</p>
+
+                {apiData.length && apiData.map((item, index) => (
+                    <>
+                        <p>[{index}] {item?.attributes?.col1?.val} {item?.attributes?.col2?.val} {item?.attributes?.col3?.val}</p>
+
+                    </>
+                ))}
             </CardBody>
         </Card>
     )
