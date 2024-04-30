@@ -66,6 +66,7 @@ const config: ISelectorConfig =
 export default function SelectorPage(props: ISelectorProps) {
     const {
         getCurrentSource,
+        getNextNameToReviev,
         onSourceChange,
         selectedSex,
         source,
@@ -82,6 +83,7 @@ export default function SelectorPage(props: ISelectorProps) {
                             <Tab key="selector" title="Wybieraj imię">
                                 <SelectorSelect
                                     currentSource={getCurrentSource()}
+                                    nextNameToReviev={getNextNameToReviev()}
                                 />
                             </Tab>
                             <Tab key="choices" title="Poprzednie decyzje">
