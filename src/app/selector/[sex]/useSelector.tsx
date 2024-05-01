@@ -7,7 +7,8 @@ import {
 import {type Dispatch, type SetStateAction, useEffect, useState} from "react";
 
 export interface IUseSelector {
-    getCurrentSource: () => ISelectorSourceElement | undefined,
+    clearSource: () => void;
+    getCurrentSourceConfig: () => ISelectorSourceElement | undefined,
     getNextNameToReviev: () => IApiDataItem | undefined,
     loadingApiData: boolean;
     onSourceChange: (value: string) => void;
@@ -47,17 +48,18 @@ export interface IApiDataItem {
 
 
 export default function useSelector(props: ISelectorProps, config: ISelectorConfig): IUseSelector {
-    const [source, setSource] = useState('empty');
+    const [source, setSource] = useState('');
     const [apiData, setApiData] = useState<IApiDataItem[]>([]);
     const [loadingApiData, setLoadingApiData] = useState(true);
 
     const selectedSex = props.params.sex;
     const findSourceConfig = (sourceItem: ISelectorSourceElement) => sourceItem.value === source
-    const getCurrentSource = () => config[selectedSex].sources.find(findSourceConfig);
+    const getCurrentSourceConfig = () => config[selectedSex].sources.find(findSourceConfig);
     const onSourceChange = (value: string) => {
         localStorage.setItem(`selected_${selectedSex}_source`, value);
         setSource(value);
     }
+    const clearSource = () => onSourceChange('');
     const setSourceFromLocalStorage = () => {
         const source = localStorage.getItem(`selected_${selectedSex}_source`);
         if (!source) return;
@@ -66,7 +68,7 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }
     const triggerfetchApiData = (url: string | URL | Request, setApiData: Dispatch<SetStateAction<IApiDataItem[]>>, setLoadingApiData: Dispatch<SetStateAction<boolean>>) => {
-        if (!getCurrentSource()) return;
+        if (!getCurrentSourceConfig()) return;
 
         fetch(url, {cache: 'force-cache'}).then((res) => {
             return res.json();
@@ -105,9 +107,18 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
     }, [])
 
     useEffect(() => {
-        if (!getCurrentSource()?.value) return;
+        if (source === '') {
+            setLoadingApiData(false);
+            return;
+        }
+        if (!getCurrentSourceConfig()?.value) {
+            console.error('cant find config for current source');
+            //TODO handle Error because cant find config for current source
+            setLoadingApiData(false);
+            return;
+        }
 
-        triggerfetchApiData(getCurrentSource().value, (x) => setApiData(x), (x) => setLoadingApiData(x));
+        triggerfetchApiData(getCurrentSourceConfig().value, (x) => setApiData(x), (x) => setLoadingApiData(x));
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [source])
 
@@ -122,7 +133,8 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
     }, [loadingApiData]);
 
     return {
-        getCurrentSource,
+        clearSource,
+        getCurrentSourceConfig,
         getNextNameToReviev,
         loadingApiData,
         onSourceChange,

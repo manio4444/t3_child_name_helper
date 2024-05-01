@@ -65,7 +65,8 @@ const config: ISelectorConfig =
 
 export default function SelectorPage(props: ISelectorProps) {
     const {
-        getCurrentSource,
+        clearSource,
+        getCurrentSourceConfig,
         getNextNameToReviev,
         loadingApiData,
         onSourceChange,
@@ -83,18 +84,19 @@ export default function SelectorPage(props: ISelectorProps) {
                         <Tabs aria-label="Options">
                             <Tab key="selector" title="Wybieraj imię">
                                 <SelectorSelect
-                                    currentSource={getCurrentSource()}
+                                    currentSource={getCurrentSourceConfig()}
                                     loadingApiData={loadingApiData}
                                     nextNameToReviev={getNextNameToReviev()}
                                 />
                             </Tab>
                             <Tab key="choices" title="Poprzednie decyzje">
                                 <SelectorHistory
-                                    currentSource={getCurrentSource()}
+                                    currentSource={getCurrentSourceConfig()}
                                 />
                             </Tab>
                             <Tab key="source" title="Źródło imion">
                                 <SelectorSource
+                                    clearSource={clearSource}
                                     selected={source}
                                     onValueChange={onSourceChange}
                                     options={config[selectedSex].sources}

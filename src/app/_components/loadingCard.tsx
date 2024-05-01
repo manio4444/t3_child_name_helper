@@ -2,7 +2,7 @@ import {Card, CardHeader, Divider} from "@nextui-org/react";
 import {type PropsWithChildren} from "react";
 
 interface ILoadingCard {
-    desc: string;
+    desc?: string;
 }
 
 export default function LoadingCard({children, desc}: ILoadingCard & PropsWithChildren) {
@@ -10,8 +10,8 @@ export default function LoadingCard({children, desc}: ILoadingCard & PropsWithCh
     return (
         <Card>
             <CardHeader className="flex gap-3">
-                <span className="loader"/>
-                <p className="text-sm">{desc}</p>
+                <span className="CNH_spinner"/>
+                <p className="text-sm">{desc ?? "Loading"}</p>
                 <div>{children}</div>
             </CardHeader>
             <Divider/>

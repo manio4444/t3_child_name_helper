@@ -15,7 +15,7 @@ interface ISelectorSelect {
 export default function SelectorSelect({currentSource, loadingApiData, nextNameToReviev}: ISelectorSelect) {
 
     if (loadingApiData) {
-        return <LoadingCard desc="LOADING DATA"/>
+        return <LoadingCard desc="Ładowanie bazy imion"/>
     }
     if (!currentSource) {
         return <ErrorCard desc={'Nie wybrano źródła imion.'}/>

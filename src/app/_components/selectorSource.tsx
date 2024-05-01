@@ -6,12 +6,13 @@ import {CustomRadio} from "~/app/_components/customRadio";
 import {type IUseSelector} from "~/app/selector/[sex]/useSelector";
 
 interface ISelectorSource {
+    clearSource: IUseSelector['clearSource'];
     options: Array<ISelectorSourceElement>;
     selected: IUseSelector['source'];
     onValueChange: IUseSelector['onSourceChange'];
 }
 
-export default function SelectorSource({options, selected, onValueChange}: ISelectorSource) {
+export default function SelectorSource({clearSource, options, selected, onValueChange}: ISelectorSource) {
     return (
         <Card>
             <CardBody>
@@ -20,7 +21,7 @@ export default function SelectorSource({options, selected, onValueChange}: ISele
                     value={selected}
                     onValueChange={onValueChange}
                 >
-                    <CustomRadio isDisabled value="empty" description="Brak">{'Brak'}</CustomRadio>
+                    <CustomRadio isDisabled value="" description="Brak">{'Brak'}</CustomRadio>
                     {options.map((option) =>
                         <CustomRadio
                             key={option.index}
@@ -40,6 +41,8 @@ export default function SelectorSource({options, selected, onValueChange}: ISele
                         </CustomRadio>
                     )}
                 </RadioGroup>
+                <br/>
+                <Button onClick={clearSource}>clear</Button>
             </CardBody>
         </Card>
     )
