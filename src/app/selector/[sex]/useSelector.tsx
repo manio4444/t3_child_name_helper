@@ -1,16 +1,20 @@
+import {type Dispatch, type SetStateAction, useEffect, useState} from "react";
+
 import {
     type ISelectorConfig,
     type ISelectorProps,
     type ISelectorSourceElement,
     type SEX_ENUM
 } from "~/app/selector/[sex]/page";
-import {type Dispatch, type SetStateAction, useEffect, useState} from "react";
 
 export interface IUseSelector {
     clearSource: () => void;
     getCurrentSourceConfig: () => ISelectorSourceElement | undefined,
+    getNextNameMeta: () => INextNameMeta | undefined,
     getNextNameToReviev: () => IApiDataItem | undefined,
     loadingApiData: boolean;
+    nameApprove: (id: IApiDataItem['id']) => void;
+    nameDismiss: (id: IApiDataItem['id']) => void;
     onSourceChange: (value: string) => void;
     selectedSex: SEX_ENUM,
     source: string,
@@ -46,6 +50,16 @@ export interface IApiDataItem {
     }
 }
 
+export interface INextNameMeta {
+    count: {
+        all: number;
+        current: number;
+    },
+    occurrences: {
+        max: number;
+        all: number;
+    }
+}
 
 export default function useSelector(props: ISelectorProps, config: ISelectorConfig): IUseSelector {
     const [source, setSource] = useState('');
@@ -70,6 +84,7 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
     const triggerfetchApiData = (url: string | URL | Request, setApiData: Dispatch<SetStateAction<IApiDataItem[]>>, setLoadingApiData: Dispatch<SetStateAction<boolean>>) => {
         if (!getCurrentSourceConfig()) return;
 
+        setLoadingApiData(true);
         fetch(url, {cache: 'force-cache'}).then((res) => {
             return res.json();
         }).then((res) => {
@@ -99,6 +114,27 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
         return apiData[Math.floor(Math.random() * apiData.length)]
     }
 
+    const getNextNameMeta = () => {
+        if (!apiData || loadingApiData) return;
+
+        return {
+            count: {
+                all: apiData.length,
+                current: 0, //TODO: temp
+            },
+            occurrences: {
+                max: Math.max(...apiData.map(o => o.attributes.col3.val)),
+                all: apiData.reduce((acc, cur) => acc + cur.attributes.col3.val, 0),
+            }
+        }
+    }
+    const nameApprove = (id: IApiDataItem['id']) => {
+        return;
+    }
+    const nameDismiss = (id: IApiDataItem['id']) => {
+        return;
+    }
+
 
     useEffect(() => {
         setSourceFromLocalStorage();
@@ -125,9 +161,8 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
     useEffect(() => {
         if (loadingApiData) return;
 
-        console.log('### apiData', apiData)
-        console.log('### apiData.filter(filterDuplicates)', apiData.filter(filterDuplicates))
         const sortedApiData = apiData.filter(filterDuplicates);
+        console.log('### sortedApiData.length', sortedApiData.length)
         setApiData(sortedApiData);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loadingApiData]);
@@ -135,8 +170,11 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
     return {
         clearSource,
         getCurrentSourceConfig,
+        getNextNameMeta,
         getNextNameToReviev,
         loadingApiData,
+        nameApprove,
+        nameDismiss,
         onSourceChange,
         selectedSex,
         source,

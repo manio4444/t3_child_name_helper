@@ -67,8 +67,11 @@ export default function SelectorPage(props: ISelectorProps) {
     const {
         clearSource,
         getCurrentSourceConfig,
+        getNextNameMeta,
         getNextNameToReviev,
         loadingApiData,
+        nameApprove,
+        nameDismiss,
         onSourceChange,
         selectedSex,
         source,
@@ -86,7 +89,10 @@ export default function SelectorPage(props: ISelectorProps) {
                                 <SelectorSelect
                                     currentSource={getCurrentSourceConfig()}
                                     loadingApiData={loadingApiData}
+                                    nameApprove={nameApprove}
+                                    nameDismiss={nameDismiss}
                                     nextNameToReviev={getNextNameToReviev()}
+                                    nextNameMeta={getNextNameMeta()}
                                 />
                             </Tab>
                             <Tab key="choices" title="Poprzednie decyzje">
