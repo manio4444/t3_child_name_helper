@@ -65,7 +65,9 @@ const config: ISelectorConfig =
 
 export default function SelectorPage(props: ISelectorProps) {
     const {
+        apiData,
         clearSource,
+        decisions,
         getCurrentSourceConfig,
         getNextNameMeta,
         getNextNameToReviev,
@@ -97,7 +99,10 @@ export default function SelectorPage(props: ISelectorProps) {
                             </Tab>
                             <Tab key="choices" title="Poprzednie decyzje">
                                 <SelectorHistory
+                                    apiData={apiData}
                                     currentSource={getCurrentSourceConfig()}
+                                    decisions={decisions}
+                                    loadingApiData={loadingApiData}
                                 />
                             </Tab>
                             <Tab key="source" title="Źródło imion">

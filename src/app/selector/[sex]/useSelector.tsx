@@ -8,7 +8,9 @@ import {
 } from "~/app/selector/[sex]/page";
 
 export interface IUseSelector {
+    apiData: IApiDataItem[];
     clearSource: () => void;
+    decisions: IDecision[];
     getCurrentSourceConfig: () => ISelectorSourceElement | undefined,
     getNextNameMeta: () => INextNameMeta | undefined,
     getNextNameToReviev: () => IApiDataItem | undefined,
@@ -61,7 +63,7 @@ export interface INextNameMeta {
     }
 }
 
-interface IDecision {
+export interface IDecision {
     nameId: IApiDataItem['id'];
     decision: boolean;
     dateChange: Date;
@@ -98,8 +100,7 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
             newDecision
         ]);
     }
-    const setDecisionsFromLocalStorage = () => {
-        const sourceIndex = getCurrentSourceConfig()?.index;
+    const setDecisionsFromLocalStorage = (sourceIndex: number) => {
         const decisions = localStorage.getItem(`decisions_${selectedSex}_index_${sourceIndex}`);
 
         if (!decisions || !JSON.parse(decisions)) return;
@@ -173,7 +174,6 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
 
     useEffect(() => {
         setSourceFromLocalStorage();
-        setDecisionsFromLocalStorage();
 
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -184,6 +184,7 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
             return;
         }
         const currentSourceValue = getCurrentSourceConfig()?.value;
+        const currentSourceIndex = getCurrentSourceConfig()?.index;
 
         if (!currentSourceValue) {
             console.error('cant find config for current source');
@@ -193,6 +194,8 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
         }
 
         triggerfetchApiData(currentSourceValue, (x) => setApiData(x), (x) => setLoadingApiData(x));
+        currentSourceIndex !== undefined && setDecisionsFromLocalStorage(currentSourceIndex);
+
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [source])
 
@@ -206,7 +209,9 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
     }, [loadingApiData]);
 
     return {
+        apiData,
         clearSource,
+        decisions,
         getCurrentSourceConfig,
         getNextNameMeta,
         getNextNameToReviev,
