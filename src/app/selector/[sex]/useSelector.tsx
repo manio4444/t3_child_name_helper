@@ -4,7 +4,7 @@ import {
     type ISelectorConfig,
     type ISelectorProps,
     type ISelectorSourceElement,
-    type SEX_ENUM
+    type TSex
 } from "~/app/selector/[sex]/page";
 
 export interface IUseSelector {
@@ -16,7 +16,7 @@ export interface IUseSelector {
     nameApprove: (id: IApiDataItem['id']) => void;
     nameDismiss: (id: IApiDataItem['id']) => void;
     onSourceChange: (value: string) => void;
-    selectedSex: SEX_ENUM,
+    selectedSex: TSex,
     source: string,
 }
 
@@ -147,14 +147,16 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
             setLoadingApiData(false);
             return;
         }
-        if (!getCurrentSourceConfig()?.value) {
+        const currentSourceValue = getCurrentSourceConfig()?.value;
+
+        if (!currentSourceValue) {
             console.error('cant find config for current source');
             //TODO handle Error because cant find config for current source
             setLoadingApiData(false);
             return;
         }
 
-        triggerfetchApiData(getCurrentSourceConfig().value, (x) => setApiData(x), (x) => setLoadingApiData(x));
+        triggerfetchApiData(currentSourceValue, (x) => setApiData(x), (x) => setLoadingApiData(x));
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [source])
 

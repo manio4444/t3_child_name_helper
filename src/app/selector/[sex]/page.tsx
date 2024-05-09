@@ -12,14 +12,16 @@ import SelectorHistory from "~/app/_components/selectorHistory";
 import SelectorSelect from "~/app/_components/selectorSelect";
 import useSelector from "~/app/selector/[sex]/useSelector";
 
-export enum SEX_ENUM {
+enum SEX_ENUM {
     WOMEN = 'women',
     MEN = 'men',
 }
 
+export type TSex = SEX_ENUM;
+
 export interface ISelectorProps {
     params: {
-        sex: SEX_ENUM;
+        sex: TSex;
     };
 }
 
@@ -30,12 +32,10 @@ export type ISelectorSourceElement = {
     value: string;
 };
 
-export type ISelectorConfig = {
-    [key in SEX_ENUM]: {
-        title: string;
-        sources: Array<ISelectorSourceElement>
-    };
-};
+export type ISelectorConfig = Record<TSex, {
+    title: string;
+    sources: Array<ISelectorSourceElement>
+}>;
 
 const config: ISelectorConfig =
     {
