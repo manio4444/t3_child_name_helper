@@ -19,6 +19,8 @@ interface ISelectorSelect {
 export default function SelectorSelect({
                                            currentSource,
                                            loadingApiData,
+                                           nameApprove,
+                                           nameDismiss,
                                            nextNameMeta,
                                            nextNameToReviev,
                                        }: ISelectorSelect) {
@@ -66,12 +68,16 @@ ${nextNameMeta?.occurrences.all}`}
                 </CardBody>
                 <CardFooter>
                     <ButtonGroup className="w-full">
-                        <Button className="w-full text-white" color="success">
-                            Tak
-                        </Button>
-                        <Button className="w-full text-white" color="danger">
-                            Nie
-                        </Button>
+                        <Button
+                            className="w-full text-white"
+                            color="success"
+                            onClick={() => nameApprove(nextNameToReviev.id)}
+                        >Tak</Button>
+                        <Button
+                            className="w-full text-white"
+                            color="danger"
+                            onClick={() => nameDismiss(nextNameToReviev.id)}
+                        >Nie</Button>
                     </ButtonGroup>
                 </CardFooter>
             </Card>

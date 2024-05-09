@@ -61,8 +61,15 @@ export interface INextNameMeta {
     }
 }
 
+interface IDecision {
+    nameId: IApiDataItem['id'];
+    decision: boolean;
+    dateChange: Date;
+}
+
 export default function useSelector(props: ISelectorProps, config: ISelectorConfig): IUseSelector {
     const [source, setSource] = useState('');
+    const [decisions, setDecisions] = useState<IDecision[]>([]);
     const [apiData, setApiData] = useState<IApiDataItem[]>([]);
     const [loadingApiData, setLoadingApiData] = useState(true);
 
@@ -79,7 +86,25 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
         if (!source) return;
         // TODO: Additional checking/error throw when source is set but does not exists in config?
         setSource(source);
+
         //eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+    const onDecisionsChange = (newDecision: IDecision) => {
+        const sourceIndex = getCurrentSourceConfig()?.index;
+
+        localStorage.setItem(`decisions_${selectedSex}_index_${sourceIndex}`, JSON.stringify([...decisions, newDecision]));
+        setDecisions(prevState => [
+            ...prevState,
+            newDecision
+        ]);
+    }
+    const setDecisionsFromLocalStorage = () => {
+        const sourceIndex = getCurrentSourceConfig()?.index;
+        const decisions = localStorage.getItem(`decisions_${selectedSex}_index_${sourceIndex}`);
+
+        if (!decisions || !JSON.parse(decisions)) return;
+
+        setDecisions(JSON.parse(decisions) as IDecision[]);
     }
     const triggerfetchApiData = (url: string | URL | Request, setApiData: Dispatch<SetStateAction<IApiDataItem[]>>, setLoadingApiData: Dispatch<SetStateAction<boolean>>) => {
         if (!getCurrentSourceConfig()) return;
@@ -128,16 +153,27 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
             }
         }
     }
-    const nameApprove = (id: IApiDataItem['id']) => {
+    const nameApprove = (nameId: IApiDataItem['id']) => {
+        onDecisionsChange({
+            nameId,
+            decision: true,
+            dateChange: new Date(),
+        });
         return;
     }
-    const nameDismiss = (id: IApiDataItem['id']) => {
+    const nameDismiss = (nameId: IApiDataItem['id']) => {
+        onDecisionsChange({
+            nameId,
+            decision: false,
+            dateChange: new Date(),
+        });
         return;
     }
 
 
     useEffect(() => {
         setSourceFromLocalStorage();
+        setDecisionsFromLocalStorage();
 
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
