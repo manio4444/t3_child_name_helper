@@ -9,6 +9,7 @@ import {
 
 export interface IUseSelector {
     apiData: IApiDataItem[];
+    clearDecisions: () => void;
     clearSource: () => void;
     decisions: IDecision[];
     getCurrentSourceConfig: () => ISelectorSourceElement | undefined,
@@ -100,6 +101,7 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
             newDecision
         ]);
     }
+    const clearDecisions = () => setDecisions([]);
     const setDecisionsFromLocalStorage = (sourceIndex: number) => {
         const decisions = localStorage.getItem(`decisions_${selectedSex}_index_${sourceIndex}`);
 
@@ -210,6 +212,7 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
 
     return {
         apiData,
+        clearDecisions,
         clearSource,
         decisions,
         getCurrentSourceConfig,

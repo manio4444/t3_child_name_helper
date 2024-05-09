@@ -66,6 +66,7 @@ const config: ISelectorConfig =
 export default function SelectorPage(props: ISelectorProps) {
     const {
         apiData,
+        clearDecisions,
         clearSource,
         decisions,
         getCurrentSourceConfig,
@@ -100,6 +101,7 @@ export default function SelectorPage(props: ISelectorProps) {
                             <Tab key="choices" title="Poprzednie decyzje">
                                 <SelectorHistory
                                     apiData={apiData}
+                                    clearDecisions={clearDecisions}
                                     currentSource={getCurrentSourceConfig()}
                                     decisions={decisions}
                                     loadingApiData={loadingApiData}
