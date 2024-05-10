@@ -19,7 +19,13 @@ interface ISelectorHistory extends Pick<IUseSelector, "apiData" | "clearDecision
     currentSource?: ISelectorSourceElement;
 }
 
-export default function SelectorHistory({apiData, clearDecisions, currentSource, decisions, loadingApiData}: ISelectorHistory) {
+export default function SelectorHistory({
+                                            apiData,
+                                            clearDecisions,
+                                            currentSource,
+                                            decisions,
+                                            loadingApiData
+                                        }: ISelectorHistory) {
     const findNameDataById = (nameData: IApiDataItem, nameId: IApiDataItem['id']) => nameData.id === nameId;
 
     if (loadingApiData) {
@@ -48,7 +54,7 @@ export default function SelectorHistory({apiData, clearDecisions, currentSource,
                         <TableColumn>Lp.</TableColumn>
                     </TableHeader>
                     <TableBody>
-                        {decisions?.reverse().map((decision, index) => {
+                        {decisions?.map((decision, index) => {
                             const nameData = apiData.find(nameData => findNameDataById(nameData, decision.nameId));
                             const decisionDate = new Date(decision.dateChange);
                             return (
@@ -60,7 +66,7 @@ export default function SelectorHistory({apiData, clearDecisions, currentSource,
                                     <TableCell>{index}</TableCell>
                                 </TableRow>
                             )
-                        })}
+                        }).reverse()}
 
                     </TableBody>
                 </Table>
