@@ -41,9 +41,21 @@ export default function SelectorSelect({
 
     return (
         <>
-            <ProgressCard
-                value={Number(((12 / 100) * 100).toFixed())} //TODO
-            />
+            {nextNameMeta && <ProgressCard
+                label={`Przejrzane ${nextNameMeta.decisions.all}/${nextNameMeta.count.all}`}
+                value={Number(((nextNameMeta.decisions.all / nextNameMeta.count.all) * 100).toFixed())}
+            />}
+            <Spacer className="pt-0 bg-rose-500"/>
+            {nextNameMeta && <ProgressCard
+                label={`Imiona na "tak"`}
+                formatOptions={{style: 'decimal'}}
+                maxValue={nextNameMeta.decisions.all}
+                color="success"
+                classNames={{
+                    track: ' bg-[#f31260]'
+                }}
+                value={nextNameMeta.decisions.positive}
+            />}
             <Spacer className="pb-2.5"/>
             <Card className="max-w-[400px]">
                 <CardBody className="items-center">
@@ -55,8 +67,10 @@ export default function SelectorSelect({
                         className="text-default-500"
                         title={`count.all:
 ${nextNameMeta?.count.all}
-count.current:
-${nextNameMeta?.count.current}
+decisions.all:
+${nextNameMeta?.decisions.all}
+decisions.positive:
+${nextNameMeta?.decisions.positive}
 occurrences.max:
 ${nextNameMeta?.occurrences.max}
 occurrences.all:

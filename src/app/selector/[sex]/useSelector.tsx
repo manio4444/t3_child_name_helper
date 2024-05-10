@@ -56,7 +56,10 @@ export interface IApiDataItem {
 export interface INextNameMeta {
     count: {
         all: number;
-        current: number;
+    },
+    decisions: {
+        all: number;
+        positive: number;
     },
     occurrences: {
         max: number;
@@ -148,7 +151,10 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
         return {
             count: {
                 all: apiData.length,
-                current: 0, //TODO: temp
+            },
+            decisions: {
+                positive: decisions.filter(decision => decision.decision).length,
+                all: decisions.length
             },
             occurrences: {
                 max: Math.max(...apiData.map(o => o.attributes.col3.val)),
