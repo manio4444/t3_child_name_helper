@@ -3,6 +3,7 @@
 import {
     Card,
     CardBody,
+    Spacer,
     Tab,
     Tabs
 } from "@nextui-org/react";
@@ -11,6 +12,7 @@ import SelectorSource from "~/app/_components/selectorSource";
 import SelectorHistory from "~/app/_components/selectorHistory";
 import SelectorSelect from "~/app/_components/selectorSelect";
 import useSelector from "~/app/selector/[sex]/useSelector";
+import SelectorMetaProgress from "~/app/_components/selectorMetaProgress";
 
 enum SEX_ENUM {
     WOMEN = 'women',
@@ -89,6 +91,8 @@ export default function SelectorPage(props: ISelectorProps) {
                     <div className="flex full flex-col">
                         <Tabs aria-label="Options">
                             <Tab key="selector" title="Wybieraj imię">
+                                <SelectorMetaProgress nextNameMeta={getNextNameMeta()}/>
+                                <Spacer className="pb-2.5"/>
                                 <SelectorSelect
                                     currentSource={getCurrentSourceConfig()}
                                     loadingApiData={loadingApiData}
