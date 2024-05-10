@@ -115,6 +115,7 @@ export default function SelectorPage(props: ISelectorProps) {
                                     currentSource={getCurrentSourceConfig()}
                                     decisions={decisions}
                                     loadingApiData={loadingApiData}
+                                    onDecisionsChange={onDecisionsChange}
                                 />
                             </Tab>
                             <Tab key="source" title="Źródło imion">

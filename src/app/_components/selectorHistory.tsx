@@ -2,6 +2,7 @@ import {
     Button,
     Card,
     CardBody,
+    Switch,
     Table,
     TableBody,
     TableCell,
@@ -15,7 +16,7 @@ import {type IApiDataItem, type IUseSelector} from "~/app/selector/[sex]/useSele
 import LoadingCard from "~/app/_components/loadingCard";
 import type {ISelectorSourceElement} from "~/app/selector/[sex]/page";
 
-interface ISelectorHistory extends Pick<IUseSelector, "apiData" | "clearDecisions" | "decisions" | "loadingApiData"> {
+interface ISelectorHistory extends Pick<IUseSelector, "apiData" | "clearDecisions" | "decisions" | "loadingApiData" | "onDecisionsChange"> {
     currentSource?: ISelectorSourceElement;
 }
 
@@ -24,7 +25,8 @@ export default function SelectorHistory({
                                             clearDecisions,
                                             currentSource,
                                             decisions,
-                                            loadingApiData
+                                            loadingApiData,
+                                            onDecisionsChange,
                                         }: ISelectorHistory) {
     const findNameDataById = (nameData: IApiDataItem, nameId: IApiDataItem['id']) => nameData.id === nameId;
 
@@ -48,7 +50,7 @@ export default function SelectorHistory({
                 <Table aria-label="Example static collection table">
                     <TableHeader>
                         <TableColumn>Imię</TableColumn>
-                        <TableColumn>?</TableColumn>
+                        <TableColumn>Decyzja</TableColumn>
                         <TableColumn>Data decyzji</TableColumn>
                         <TableColumn>Godzina decyzji</TableColumn>
                         <TableColumn>Lp.</TableColumn>
@@ -60,7 +62,14 @@ export default function SelectorHistory({
                             return (
                                 <TableRow key={index}>
                                     <TableCell>{nameData?.attributes.col1.val}</TableCell>
-                                    <TableCell>{decision.decision ? "✔" : "❌"}</TableCell>
+                                    <TableCell>
+                                        <Switch
+                                            color="success"
+                                            isSelected={decision.decision}
+                                            onValueChange={value => onDecisionsChange(decision.nameId, value)}
+                                        >
+                                        </Switch>
+                                    </TableCell>
                                     <TableCell>{decisionDate.toLocaleDateString()}</TableCell>
                                     <TableCell>{decisionDate.toLocaleTimeString()}</TableCell>
                                     <TableCell>{index}</TableCell>

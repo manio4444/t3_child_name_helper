@@ -18,7 +18,7 @@ export default function SelectorMetaProgress({nextNameMeta}: ISelectorMetaProgre
             label={`Przejrzane ${nextNameMeta.decisions.all}/${nextNameMeta.count.all}`}
             value={Number(((nextNameMeta.decisions.all / nextNameMeta.count.all) * 100).toFixed())}
         />
-        <Spacer className="pt-0 bg-rose-500"/>
+        <Spacer className="pt-0"/>
         <ProgressCard
             label={`Imiona na "tak"`}
             formatOptions={{style: 'decimal'}}

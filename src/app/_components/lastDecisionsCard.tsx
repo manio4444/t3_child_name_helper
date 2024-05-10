@@ -25,7 +25,7 @@ export default function LastDecisionsCard({
     }
 
     return (
-        <Table className="max-w-[400px]">
+        <Table className="max-w-[400px]" aria-label="Table with last decisions made">
             <TableHeader>
                 <TableColumn>Imię</TableColumn>
                 <TableColumn>Decyzja</TableColumn>
