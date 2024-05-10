@@ -8,20 +8,18 @@ import LoadingCard from "~/app/_components/loadingCard";
 interface ISelectorSelect {
     currentSource?: ISelectorSourceElement;
     loadingApiData: IUseSelector['loadingApiData'];
-    nameApprove: IUseSelector['nameApprove'];
-    nameDismiss: IUseSelector['nameDismiss'];
     nextNameToReviev?: IApiDataItem;
     nextNameMeta?: INextNameMeta;
+    onDecisionsChange: IUseSelector['onDecisionsChange'];
 }
 
 
 export default function SelectorSelect({
                                            currentSource,
                                            loadingApiData,
-                                           nameApprove,
-                                           nameDismiss,
                                            nextNameMeta,
                                            nextNameToReviev,
+                                           onDecisionsChange,
                                        }: ISelectorSelect) {
 
     if (loadingApiData) {
@@ -67,12 +65,12 @@ ${nextNameMeta?.occurrences.all}`}
                     <Button
                         className="w-full text-white"
                         color="success"
-                        onClick={() => nameApprove(nextNameToReviev.id)}
+                        onClick={() => onDecisionsChange(nextNameToReviev.id, true)}
                     >Tak</Button>
                     <Button
                         className="w-full text-white"
                         color="danger"
-                        onClick={() => nameDismiss(nextNameToReviev.id)}
+                        onClick={() => onDecisionsChange(nextNameToReviev.id, false)}
                     >Nie</Button>
                 </ButtonGroup>
             </CardFooter>

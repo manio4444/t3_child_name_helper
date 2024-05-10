@@ -13,6 +13,7 @@ import SelectorHistory from "~/app/_components/selectorHistory";
 import SelectorSelect from "~/app/_components/selectorSelect";
 import useSelector from "~/app/selector/[sex]/useSelector";
 import SelectorMetaProgress from "~/app/_components/selectorMetaProgress";
+import LastDecisionsCard from "~/app/_components/lastDecisionsCard";
 
 enum SEX_ENUM {
     WOMEN = 'women',
@@ -75,8 +76,7 @@ export default function SelectorPage(props: ISelectorProps) {
         getNextNameMeta,
         getNextNameToReviev,
         loadingApiData,
-        nameApprove,
-        nameDismiss,
+        onDecisionsChange,
         onSourceChange,
         selectedSex,
         source,
@@ -96,10 +96,16 @@ export default function SelectorPage(props: ISelectorProps) {
                                 <SelectorSelect
                                     currentSource={getCurrentSourceConfig()}
                                     loadingApiData={loadingApiData}
-                                    nameApprove={nameApprove}
-                                    nameDismiss={nameDismiss}
                                     nextNameToReviev={getNextNameToReviev()}
                                     nextNameMeta={getNextNameMeta()}
+                                    onDecisionsChange={onDecisionsChange}
+                                />
+                                <Spacer className="pb-2.5"/>
+                                <LastDecisionsCard
+                                    apiData={apiData}
+                                    decisions={decisions.slice(-5)}
+                                    loadingApiData={loadingApiData}
+                                    onDecisionsChange={onDecisionsChange}
                                 />
                             </Tab>
                             <Tab key="choices" title="Poprzednie decyzje">

@@ -16,8 +16,7 @@ export interface IUseSelector {
     getNextNameMeta: () => INextNameMeta | undefined,
     getNextNameToReviev: () => IApiDataItem | undefined,
     loadingApiData: boolean;
-    nameApprove: (id: IApiDataItem['id']) => void;
-    nameDismiss: (id: IApiDataItem['id']) => void;
+    onDecisionsChange: (nameId: IDecision['nameId'], decision: IDecision['decision']) => void;
     onSourceChange: (value: string) => void;
     selectedSex: TSex,
     source: string,
@@ -95,14 +94,21 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
 
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }
-    const onDecisionsChange = (newDecision: IDecision) => {
+    const onDecisionsChange = (nameId: IDecision['nameId'], decision: IDecision['decision']) => {
         const sourceIndex = getCurrentSourceConfig()?.index;
+        const newDecision: IDecision = {
+            nameId,
+            decision,
+            dateChange: new Date(),
+        }
+        const existsDecisions = decisions.find(item => item.nameId === nameId);
 
-        localStorage.setItem(`decisions_${selectedSex}_index_${sourceIndex}`, JSON.stringify([...decisions, newDecision]));
-        setDecisions(prevState => [
-            ...prevState,
-            newDecision
-        ]);
+        const decisionsUpdated = existsDecisions ? decisions.map(item => {
+            return item.nameId === nameId ? newDecision : item;
+        }) : [...decisions, newDecision];
+
+        localStorage.setItem(`decisions_${selectedSex}_index_${sourceIndex}`, JSON.stringify(decisionsUpdated));
+        setDecisions(decisionsUpdated);
     }
     const clearDecisions = () => setDecisions([]);
     const setDecisionsFromLocalStorage = (sourceIndex: number) => {
@@ -162,23 +168,6 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
             }
         }
     }
-    const nameApprove = (nameId: IApiDataItem['id']) => {
-        onDecisionsChange({
-            nameId,
-            decision: true,
-            dateChange: new Date(),
-        });
-        return;
-    }
-    const nameDismiss = (nameId: IApiDataItem['id']) => {
-        onDecisionsChange({
-            nameId,
-            decision: false,
-            dateChange: new Date(),
-        });
-        return;
-    }
-
 
     useEffect(() => {
         setSourceFromLocalStorage();
@@ -225,8 +214,7 @@ export default function useSelector(props: ISelectorProps, config: ISelectorConf
         getNextNameMeta,
         getNextNameToReviev,
         loadingApiData,
-        nameApprove,
-        nameDismiss,
+        onDecisionsChange,
         onSourceChange,
         selectedSex,
         source,
