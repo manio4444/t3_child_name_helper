@@ -24,10 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-      <Providers>
+        <Providers>
           <Navbar />
-        {children}
-      </Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
